@@ -1,6 +1,7 @@
 // Example program
 #include <iostream>
 #include <string>
+#include <cstring>
 
 class Base{
     public:
@@ -41,9 +42,17 @@ int main()
 
   std::cout << std::hex << "Address of Base::foo(): " << addr_foo << std::endl;
 
-  std::cout << std::hex << (int_f_t)addr_foo << std::endl;
+  int_f_t addr_foo_ptr;
 
-  std::cout << *(dynamic_cast<int_f_t>(addr_foo))() << std::endl;
+  // std::cout << std::hex << (int(*)(void))addr_foo << std::endl;
+
+  memcpy(&addr_foo_ptr, &addr_foo, sizeof(int_f_t));
+
+  std::cout << std::hex << "Address of Base::foo() as fn ptr: " << addr_foo_ptr << std::endl;
+
+  std::cout << std::dec << addr_foo_ptr() << std::endl;
+  
+  // std::cout << *(dynamic_cast<int_f_t>(addr_foo))() << std::endl;
   // (*addr_foo)();
   // int foo ()=0;
   // int (*foo_ptr)() = &foo;
