@@ -5,6 +5,7 @@
 class Base{
     public:
     int a;
+    int y;
     virtual int foo() = 0;
 };
 
@@ -18,15 +19,46 @@ class Derived :public Base{
     
 };
 
+typedef int(*int_f_t)();
+
 int main()
 {
   Derived d;
   Base* b = &d;
   b -> a = 5;
+  b -> y = 7;
+
+  std::cout << ((int*)b)[0] << std::endl;
+  std::cout << ((int*)b)[1] << std::endl;
+  std::cout << ((int*)b)[2] << std::endl;
+  std::cout << ((int*)b)[3] << std::endl;
+
+  uint64_t* vptr = (uint64_t*)b;
+  vptr = (uint64_t*)*vptr;
+  std::cout << std::hex << "Vptr address: " << vptr << std::endl;
+
+  uint64_t* addr_foo = (uint64_t*)(*vptr);
+
+  std::cout << std::hex << "Address of Base::foo(): " << addr_foo << std::endl;
+
+  std::cout << std::hex << (int_f_t)addr_foo << std::endl;
+
+  std::cout << *(dynamic_cast<int_f_t>(addr_foo))() << std::endl;
+  // (*addr_foo)();
+  // int foo ()=0;
+  // int (*foo_ptr)() = &foo;
+  // int v[5] = {2,3,7,5,11};
+  // int* a = v;
+  // std::cout << "a[4]: " << a[4] << std::endl;
+
+  
+  std::cout << "///////////////////"<<std::endl;
   
   std::cout << "sizeof(int) == " << sizeof(int) << std::endl;
   std::cout << "sizeof(void*) == " << sizeof(void*) << std::endl;
-  std::cout << "sizeof(*Base) == " << sizeof(*b) << std::endl;
+  std::cout << "sizeof(Base) == " << sizeof(*b) << std::endl;
+  std::cout << "sizeof(*Base) == " << sizeof(b) << std::endl;
+  std::cout << "sizeof(int_f_t) == " << sizeof(int_f_t) << std::endl;
   std::cout << "b -> a == " << b -> a << std::endl;
   // (b+1) -> a = 23777;
   // std::cout << "(xd!) b -> b == " << (b+1) -> a << std::endl;
