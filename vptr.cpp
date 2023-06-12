@@ -15,7 +15,7 @@ class Derived :public Base{
     int b;
     
     int foo() {
-        return 123;
+        return 0x6a;
     };
     
 };
@@ -29,6 +29,8 @@ int main()
   b -> a = 5;
   b -> y = 7;
 
+  std::cout << std::hex;
+
   std::cout << ((int*)b)[0] << std::endl;
   std::cout << ((int*)b)[1] << std::endl;
   std::cout << ((int*)b)[2] << std::endl;
@@ -36,7 +38,7 @@ int main()
 
   uint64_t* vptr = (uint64_t*)b;
   vptr = (uint64_t*)*vptr;
-  std::cout << std::hex << "Vptr address: " << vptr << std::endl;
+  std::cout << std::hex << "Vtable address: " << vptr << std::endl;
 
   uint64_t* addr_foo = (uint64_t*)(*vptr);
 
@@ -50,7 +52,7 @@ int main()
 
   std::cout << std::hex << "Address of Base::foo() as fn ptr: " << addr_foo_ptr << std::endl;
 
-  std::cout << std::dec << addr_foo_ptr() << std::endl;
+  std::cout << std::hex << addr_foo_ptr() << std::endl;
   
   // std::cout << *(dynamic_cast<int_f_t>(addr_foo))() << std::endl;
   // (*addr_foo)();
